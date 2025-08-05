@@ -43,7 +43,7 @@ def manage_products():
             conn.execute('INSERT INTO purchases (product_id, cost, purchase_date) VALUES (?, ?, ?)',
                         (product_id, data['cost'], data['purchase_date']))
             conn.execute('INSERT INTO price_history (product_id, old_price, new_price, reason) VALUES (?, ?, ?, ?)',
-                        (product_id, 0, data['cost'], 'Cadastro inicial'))
+                        (product_id, 0, data['cost'], 'Compra do produto'))
         conn.commit()
         conn.close()
         return jsonify({'message': 'Produto cadastrado com sucesso'}), 201

@@ -1,4 +1,9 @@
 //Início
+// Variáveis globais para rastrear a lista de produtos e a seção ativa
+let currentProductList = [];
+let currentProductIndex = -1;
+let currentSection = 'products';
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM carregado, inicializando sistema...');
     // Inicializa a página na seção "Início"
@@ -81,6 +86,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Configura botões de navegação na modal de edição
+    const prevProductBtn = document.getElementById('prev-product-btn');
+    if (prevProductBtn) {
+        prevProductBtn.addEventListener('click', () => navigateProduct(-1));
+    }
+    const nextProductBtn = document.getElementById('next-product-btn');
+    if (nextProductBtn) {
+        nextProductBtn.addEventListener('click', () => navigateProduct(1));
+    }
+
     // Fecha modais com a tecla "Esc"
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -107,6 +122,7 @@ function setupNav() {
             const section = document.querySelector(href);
             if (section) {
                 section.classList.add('active');
+                currentSection = href.slice(1); // Atualiza a seção ativa
                 if (href === '#search') {
                     clearSearch();
                 } else if (href === '#maintenances') {
@@ -158,6 +174,8 @@ async function loadProducts() {
             console.error('Elemento #product-list não encontrado');
             return;
         }
+        currentProductList = products; // Armazena a lista de produtos
+        currentSection = 'products'; // Define a seção ativa
         productList.innerHTML = products.map(p => {
             const name = p.name.replace(/'/g, "\\'");
             const model = (p.model || '').replace(/'/g, "\\'");
@@ -358,13 +376,14 @@ async function deleteProduct(productId, event) {
     }
 }
 
-async function openEditModal(id, name, type, brand, model, notes, status, image_path, current_cost, supplier_name) {
+async function openEditModal(id, name, type, brand, model, notes, status, image_path, current_cost, supplier_name, index = -1) {
     try {
         const modal = document.getElementById('edit-modal');
         if (!modal) {
             console.error('Modal #edit-modal não encontrado');
             return;
         }
+        currentProductIndex = index !== -1 ? index : currentProductList.findIndex(p => p.id === id);
         document.getElementById('edit-product-id').value = id;
         document.getElementById('edit-product-name').value = name;
         document.getElementById('edit-product-type').value = type;
@@ -392,6 +411,27 @@ async function openEditModal(id, name, type, brand, model, notes, status, image_
     } catch (error) {
         console.error('Erro em openEditModal:', error);
     }
+}
+
+async function navigateProduct(direction) {
+    if (currentProductList.length === 0) return;
+    let newIndex = currentProductIndex + direction;
+    if (newIndex < 0) newIndex = currentProductList.length - 1; // Volta para o último
+    if (newIndex >= currentProductList.length) newIndex = 0; // Volta para o primeiro
+    const product = currentProductList[newIndex];
+    openEditModal(
+        product.id,
+        product.name.replace(/'/g, "\\'"),
+        product.type,
+        product.brand,
+        (product.model || '').replace(/'/g, "\\'"),
+        (product.notes || '').replace(/'/g, "\\'"),
+        product.status,
+        (product.image_path || '').replace(/'/g, "\\'"),
+        product.current_cost,
+        (product.supplier_name || '').replace(/'/g, "\\'"),
+        newIndex
+    );
 }
 
 async function openMaintenanceModal(id, name, image_path) {
@@ -649,6 +689,8 @@ async function searchProducts() {
             console.error('Elemento #search-result não encontrado');
             return;
         }
+        currentProductList = products; // Armazena os resultados da pesquisa
+        currentSection = 'search'; // Define a seção ativa como pesquisa
         searchResult.innerHTML = products.map(p => {
             const name = p.name.replace(/'/g, "\\'");
             const model = (p.model || '').replace(/'/g, "\\'");
@@ -719,6 +761,8 @@ function clearSearch() {
     if (searchQuery) searchQuery.value = '';
     if (searchType) searchType.value = 'name';
     if (searchResult) searchResult.innerHTML = '';
+    currentProductList = []; // Limpa a lista de produtos
+    currentSection = 'search';
 }
 
 function clearMaintenanceSearch() {
