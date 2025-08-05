@@ -1,3 +1,4 @@
+# inicio
 from flask import Flask, request, jsonify, render_template
 import sqlite3
 from datetime import datetime
@@ -34,9 +35,9 @@ def manage_products():
     conn = get_db()
     if request.method == 'POST':
         data = request.json
-        cursor = conn.execute('''INSERT INTO products (name, type, brand, model, notes, status, image_path)
-                                VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                            (data['name'], data['type'], data['brand'], data['model'], data['notes'], data['status'], data.get('image_path')))
+        cursor = conn.execute('''INSERT INTO products (name, type, brand, model, notes, status, image_path, supplier_name)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
+                            (data['name'], data['type'], data['brand'], data['model'], data['notes'], data['status'], data.get('image_path'), data['supplier_name']))
         product_id = cursor.lastrowid
         if 'cost' in data and 'purchase_date' in data and data['cost']:
             conn.execute('INSERT INTO purchases (product_id, cost, purchase_date) VALUES (?, ?, ?)',
@@ -63,9 +64,9 @@ def update_or_delete_product(product_id):
         data = request.json
         current_cost = get_latest_price(product_id)
         new_cost = float(data.get('cost', current_cost))
-        conn.execute('''UPDATE products SET name = ?, type = ?, brand = ?, model = ?, notes = ?, status = ?, image_path = ?
+        conn.execute('''UPDATE products SET name = ?, type = ?, brand = ?, model = ?, notes = ?, status = ?, image_path = ?, supplier_name = ?
                         WHERE id = ?''',
-                    (data['name'], data['type'], data['brand'], data['model'], data['notes'], data['status'], data.get('image_path'), product_id))
+                    (data['name'], data['type'], data['brand'], data['model'], data['notes'], data['status'], data.get('image_path'), data['supplier_name'], product_id))
         if new_cost != current_cost:
             conn.execute('UPDATE purchases SET cost = ? WHERE product_id = ?', (new_cost, product_id))
             conn.execute('INSERT INTO price_history (product_id, old_price, new_price, reason) VALUES (?, ?, ?, ?)',
@@ -241,3 +242,4 @@ if __name__ == '__main__':
     if not os.path.exists(DATABASE):
         init_db()
     app.run(debug=True, host='0.0.0.0', port=args.port)
+    #fim

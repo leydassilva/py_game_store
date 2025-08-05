@@ -1,3 +1,4 @@
+//Início
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM carregado, inicializando sistema...');
     // Inicializa a página na seção "Início"
@@ -162,17 +163,19 @@ async function loadProducts() {
             const model = (p.model || '').replace(/'/g, "\\'");
             const notes = (p.notes || '').replace(/'/g, "\\'");
             const imagePath = (p.image_path || '').replace(/'/g, "\\'");
+            const supplierName = (p.supplier_name || '').replace(/'/g, "\\'");
             return `
-                <div class="card" onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost})">
+                <div class="card" onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost}, '${supplierName}')">
                     ${p.image_path ? `<img src="${p.image_path}" alt="${name}">` : '<p>Sem imagem</p>'}
                     <p><strong>Nome:</strong> ${name}</p>
                     <p><strong>Tipo:</strong> ${p.type === 'console' ? 'Console' : p.type === 'acessorio' ? 'Acessório' : 'Jogo'}</p>
                     <p><strong>Marca:</strong> ${p.brand}</p>
                     <p><strong>Modelo:</strong> ${model || 'N/A'}</p>
+                    <p><strong>Fornecedor:</strong> ${p.supplier_name || 'N/A'}</p>
                     <p><strong>Status:</strong> ${p.status === 'em_estoque' ? 'Em Estoque' : p.status === 'em_manutencao' ? 'Em Manutenção' : 'Vendido'}</p>
                     <p><strong>Custo Atual:</strong> ${formatPrice(p.current_cost)}</p>
                     <div class="card-buttons">
-                        <button onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost})">Editar</button>
+                        <button onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost}, '${supplierName}')">Editar</button>
                         <button class="delete" onclick="deleteProduct(${p.id}, event)">Excluir</button>
                     </div>
                 </div>
@@ -288,6 +291,7 @@ async function addProduct(e) {
             notes: form.querySelector('#product-notes').value,
             status: form.querySelector('#product-status').value,
             image_path: form.querySelector('#product-image').value,
+            supplier_name: form.querySelector('#product-supplier').value,
             cost: form.querySelector('#product-cost').value,
             purchase_date: form.querySelector('#product-purchase-date').value
         };
@@ -319,6 +323,7 @@ async function updateProduct(e) {
             notes: form.querySelector('#edit-product-notes').value,
             status: form.querySelector('#edit-product-status').value,
             image_path: form.querySelector('#edit-product-image').value,
+            supplier_name: form.querySelector('#edit-product-supplier').value,
             cost: form.querySelector('#edit-product-cost').value
         };
         const response = await fetch(`/api/products/${productId}`, {
@@ -353,7 +358,7 @@ async function deleteProduct(productId, event) {
     }
 }
 
-async function openEditModal(id, name, type, brand, model, notes, status, image_path, current_cost) {
+async function openEditModal(id, name, type, brand, model, notes, status, image_path, current_cost, supplier_name) {
     try {
         const modal = document.getElementById('edit-modal');
         if (!modal) {
@@ -368,6 +373,7 @@ async function openEditModal(id, name, type, brand, model, notes, status, image_
         document.getElementById('edit-product-notes').value = notes;
         document.getElementById('edit-product-status').value = status;
         document.getElementById('edit-product-image').value = image_path;
+        document.getElementById('edit-product-supplier').value = supplier_name;
         document.getElementById('edit-product-cost').value = current_cost;
         document.getElementById('edit-maintenance-product-id').value = id;
         const imagePreview = document.getElementById('edit-product-image-preview');
@@ -409,7 +415,7 @@ async function openMaintenanceModal(id, name, image_path) {
         await loadMaintenanceHistory(id);
         modal.style.display = 'block';
     } catch (error) {
-        console.error(' stricterror em openMaintenanceModal:', error);
+        console.error('Erro em openMaintenanceModal:', error);
     }
 }
 
@@ -648,17 +654,19 @@ async function searchProducts() {
             const model = (p.model || '').replace(/'/g, "\\'");
             const notes = (p.notes || '').replace(/'/g, "\\'");
             const imagePath = (p.image_path || '').replace(/'/g, "\\'");
+            const supplierName = (p.supplier_name || '').replace(/'/g, "\\'");
             return `
-                <div class="card" onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost})">
+                <div class="card" onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost}, '${supplierName}')">
                     ${p.image_path ? `<img src="${p.image_path}" alt="${name}">` : '<p>Sem imagem</p>'}
                     <p><strong>Nome:</strong> ${name}</p>
                     <p><strong>Tipo:</strong> ${p.type === 'console' ? 'Console' : p.type === 'acessorio' ? 'Acessório' : 'Jogo'}</p>
                     <p><strong>Marca:</strong> ${p.brand}</p>
                     <p><strong>Modelo:</strong> ${model || 'N/A'}</p>
+                    <p><strong>Fornecedor:</strong> ${p.supplier_name || 'N/A'}</p>
                     <p><strong>Status:</strong> ${p.status === 'em_estoque' ? 'Em Estoque' : p.status === 'em_manutencao' ? 'Em Manutenção' : 'Vendido'}</p>
                     <p><strong>Custo Atual:</strong> ${formatPrice(p.current_cost)}</p>
                     <div class="card-buttons">
-                        <button onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost})">Editar</button>
+                        <button onclick="openEditModal(${p.id}, '${name}', '${p.type}', '${p.brand}', '${model}', '${notes}', '${p.status}', '${imagePath}', ${p.current_cost}, '${supplierName}')">Editar</button>
                         <button class="delete" onclick="deleteProduct(${p.id}, event)">Excluir</button>
                     </div>
                 </div>
@@ -685,6 +693,7 @@ async function searchMaintenanceProducts() {
             const name = p.name.replace(/'/g, "\\'");
             const model = (p.model || '').replace(/'/g, "\\'");
             const imagePath = (p.image_path || '').replace(/'/g, "\\'");
+            const supplierName = (p.supplier_name || '').replace(/'/g, "\\'");
             return `
                 <div class="card" onclick="openMaintenanceModal(${p.id}, '${name}', '${imagePath}')">
                     ${p.image_path ? `<img src="${p.image_path}" alt="${name}">` : '<p>Sem imagem</p>'}
@@ -692,6 +701,7 @@ async function searchMaintenanceProducts() {
                     <p><strong>Tipo:</strong> ${p.type === 'console' ? 'Console' : p.type === 'acessorio' ? 'Acessório' : 'Jogo'}</p>
                     <p><strong>Marca:</strong> ${p.brand}</p>
                     <p><strong>Modelo:</strong> ${model || 'N/A'}</p>
+                    <p><strong>Fornecedor:</strong> ${p.supplier_name || 'N/A'}</p>
                     <p><strong>Status:</strong> ${p.status === 'em_estoque' ? 'Em Estoque' : p.status === 'em_manutencao' ? 'Em Manutenção' : 'Vendido'}</p>
                     <p><strong>Custo Atual:</strong> ${formatPrice(p.current_cost)}</p>
                 </div>
@@ -719,3 +729,4 @@ function clearMaintenanceSearch() {
     if (searchType) searchType.value = 'name';
     if (searchResult) searchResult.innerHTML = '';
 }
+//fim
