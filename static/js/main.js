@@ -384,6 +384,14 @@ async function openEditModal(id, name, type, brand, model, notes, status, image_
             return;
         }
         currentProductIndex = index !== -1 ? index : currentProductList.findIndex(p => p.id === id);
+        const prevProductBtn = document.getElementById('prev-product-btn');
+        const nextProductBtn = document.getElementById('next-product-btn');
+        if (prevProductBtn) {
+            prevProductBtn.style.display = currentProductIndex === 0 ? 'none' : 'block';
+        }
+        if (nextProductBtn) {
+            nextProductBtn.style.display = currentProductIndex === currentProductList.length - 1 ? 'none' : 'block';
+        }
         document.getElementById('edit-product-id').value = id;
         document.getElementById('edit-product-name').value = name;
         document.getElementById('edit-product-type').value = type;
