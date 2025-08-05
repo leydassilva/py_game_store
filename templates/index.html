@@ -198,6 +198,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button id="prev-product-btn"><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button id="next-product-btn"><i class="fas fa-arrow-right"></i> Próximo</button>
                         <button class="close-btn">Fechar</button>
                     </div>
                 </div>
@@ -240,41 +242,40 @@
                                     </tr>
                                 </thead>
                                 <tbody id="maintenance-history-table-body"></tbody>
-                            </table>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="close-btn">Fechar</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="close-btn">Fechar</button>
+                    <div id="edit-maintenance-modal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h2>Editar Manutenção</h2>
+                            <form id="edit-maintenance-record-form">
+                                <input type="hidden" id="edit-maintenance-record-id">
+                                <input type="hidden" id="edit-maintenance-record-product-id">
+                                <select id="edit-maintenance-record-service" required>
+                                    <option value="">Selecione o Tipo de Serviço</option>
+                                    <option value="Limpeza">Limpeza</option>
+                                    <option value="Reparo de Controle">Reparo de Controle</option>
+                                    <option value="Troca de Peça">Troca de Peça</option>
+                                    <option value="Reparo de Leitor">Reparo de Leitor</option>
+                                    <option value="Troca de HD">Troca de HD</option>
+                                    <option value="Reparo de Fonte">Reparo de Fonte</option>
+                                    <option value="Desbloqueio/Instalação Software">Desbloqueio/Instalação Software</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                                <input type="date" id="edit-maintenance-record-date" required>
+                                <input type="number" id="edit-maintenance-record-cost" placeholder="Custo (R$)" step="0.01" required>
+                                <textarea id="edit-maintenance-record-notes" placeholder="Observações"></textarea>
+                                <button type="submit">Salvar Alterações</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                </main>
             </div>
-            <div id="edit-maintenance-modal" class="modal" style="display: none;">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h2>Editar Manutenção</h2>
-                    <form id="edit-maintenance-record-form">
-                        <input type="hidden" id="edit-maintenance-record-id">
-                        <input type="hidden" id="edit-maintenance-record-product-id">
-                        <select id="edit-maintenance-record-service" required>
-                            <option value="">Selecione o Tipo de Serviço</option>
-                            <option value="Limpeza">Limpeza</option>
-                            <option value="Reparo de Controle">Reparo de Controle</option>
-                            <option value="Troca de Peça">Troca de Peça</option>
-                            <option value="Reparo de Leitor">Reparo de Leitor</option>
-                            <option value="Troca de HD">Troca de HD</option>
-                            <option value="Reparo de Fonte">Reparo de Fonte</option>
-                            <option value="Desbloqueio/Instalação Software">Desbloqueio/Instalação Software</option>
-                            <option value="Outros">Outros</option>
-                        </select>
-                        <input type="date" id="edit-maintenance-record-date" required>
-                        <input type="number" id="edit-maintenance-record-cost" placeholder="Custo (R$)" step="0.01" required>
-                        <textarea id="edit-maintenance-record-notes" placeholder="Observações"></textarea>
-                        <button type="submit">Salvar Alterações</button>
-                    </form>
-                </div>
-            </div>
-        </main>
-    </div>
-    <script src="/static/js/main.js"></script>
-</body>
-</html>
+            <script src="/static/js/main.js"></script>
+        </body>
+    </html>
