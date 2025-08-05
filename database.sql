@@ -1,3 +1,4 @@
+--inicio
 CREATE TABLE products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -47,3 +48,5 @@ CREATE TABLE price_history (
     reason TEXT,
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
+
+--fim 
